@@ -1,25 +1,26 @@
 تطبيق أندرويد (حاسبة الطلبات) مخصص لمساعدة مناديب التوصيل على تسجيل طلباتهم اليومية وحساب دخلهم ومستحقاتهم بدقة. يدعم التطبيق حساب الدخل التراكمي بناءً على شرائح الأسعار المخصصة، وحساب البونص وبدل البنزين تلقائياً (بثلاثة مستويات)، مع عرض كشوفات وتقارير مفصلة شهرياً وسنوياً، وإمكانية تصدير التقارير وحفظها في الجهاز أو مشاركتها مباشرة كملف بي دي اف، بالإضافة إلى ميزة النسخ الاحتياطي واستعادة البيانات محلياً بدون إنترنت.
 
 ⚠️ تنبيه: في حال مواجهة أي مشاكل أثناء التثبيت أو الاستخدام، يرجى إضافة تعليق بالمشكلة أو التواصل معي عبر البريد الإلكتروني أو عبر مواقع التواصل الاجتماعي.
+
 <br>
-<br>
+
 An Android app designed for delivery drivers to track daily orders and calculate earnings automatically. Features customizable pricing tiers, 3-level bonus & fuel allowance calculations, monthly and annual financial summaries, local JSON backup/restore, and full PDF report export, saving, and sharing.
 
 ⚠️ Note: In case of facing any issues during installation or usage, please leave a comment describing the issue, or contact me via email or through social media.
 
-Images from inside the app |                                                      صور من داخل التطبيق
 <br>
-<br>
-<p align="center">
-  <img src="hasibat_altalabat (1).jpeg" width="18%" />
-  <img src="hasibat_altalabat (2).jpeg" width="18%" />
-  <img src="hasibat_altalabat (3).jpeg" width="18%" />
-  <img src="hasibat_altalabat (4).jpeg" width="18%" />
-  <img src="hasibat_altalabat (5).jpeg" width="18%" />
-  <img src="hasibat_altalabat (6).jpeg" width="18%" />
-  <img src="hasibat_altalabat (7).jpeg" width="18%" />
-  <img src="hasibat_altalabat (8).jpeg" width="18%" />
-  <img src="hasibat_altalabat (9).jpeg" width="18%" />
-  <img src="hasibat_altalabat (10).jpeg" width="18%" />
-</p>
 
+<h3 align="center">صور من داخل التطبيق | Images from inside the app</h3>
+
+<p align="center">
+  <img src="Screenshots/hasibat_altalabat (1).jpeg" width="18%" />
+  <img src="Screenshots/hasibat_altalabat (2).jpeg" width="18%" />
+  <img src="Screenshots/hasibat_altalabat (3).jpeg" width="18%" />
+  <img src="Screenshots/hasibat_altalabat (4).jpeg" width="18%" />
+  <img src="Screenshots/hasibat_altalabat (5).jpeg" width="18%" />
+  <img src="Screenshots/hasibat_altalabat (6).jpeg" width="18%" />
+  <img src="Screenshots/hasibat_altalabat (7).jpeg" width="18%" />
+  <img src="Screenshots/hasibat_altalabat (8).jpeg" width="18%" />
+  <img src="Screenshots/hasibat_altalabat (9).jpeg" width="18%" />
+  <img src="Screenshots/hasibat_altalabat (10).jpeg" width="18%" />
+</p>
