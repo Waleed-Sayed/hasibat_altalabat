@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>حاسبة الطلبات</title>
+    <style>
+        :root {
+          --primary: #c2185b;
+          --primary-dark: #880e4f;
+          --accent: #ffb300;
+          --bg: #f8fafc;
+          --card: #ffffff;
+          --text: #1e293b;
+          --text-muted: #64748b;
+          --border: #e2e8f0;
+          --success: #10b981;
+          --danger: #ef4444;
+          --danger-dark: #b91c1c;
+        }
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+          -webkit-tap-highlight-color: transparent;
+        }
+        body {
+          background-color: var(--bg);
+          color: var(--text);
+          padding-bottom: 95px;
+        }
+        input, select, td, th, .stat-val, .badge, .tier-note {
+          font-variant-numeric: normal;
+          font-feature-settings: "tnum" 1;
+        }
+        input[type="number"], select {
+          direction: ltr;
+          text-align: center;
+        }
+        header {
+          background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+          color: white;
+          padding: 14px 16px;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        header h1 {
+          font-size: 1.1rem;
+          font-weight: 700;
+        }
+        .badge {
+          background: rgba(255,255,255,0.2);
+          padding: 4px 10px;
+          border-radius: 20px;
+          font-size: 0.8rem;
+        }
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 12px;
+        }
+        .card {
+          background: var(--card);
+          border-radius: 14px;
+          padding: 15px;
+          margin-bottom: 12px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+          border: 1px solid var(--border);
+        }
+        .card-title {
+          font-weight: 700;
+          font-size: 0.95rem;
+          color: var(--primary-dark);
+          margin-bottom: 12px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid var(--border);
+          padding-bottom: 8px;
+        }
+        .grid-2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .grid-3 {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+        }
+        .stat-box {
+          background: #f1f5f9;
+          padding: 10px;
+          border-radius: 10px;
+          text-align: center;
+        }
+        .stat-box.highlight {
+          background: #fce4ec;
+          border: 1px solid #f8bbd0;
+        }
+        .stat-label {
+          font-size: 0.72rem;
+          color: var(--text-muted);
+          margin-bottom: 4px;
+        }
+        .stat-val {
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: var(--text);
+        }
+        .stat-box.highlight .stat-val {
+          color: var(--primary-dark);
+        }
+        label {
+          display: block;
+          font-size: 0.8rem;
+          font-weight: 600;
+          margin-bottom: 5px;
+          color: #475569;
+          text-align: right;
+        }
+        input, select {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          font-size: 0.95rem;
+          background: #fff;
+          margin-bottom: 10px;
+          outline: none;
+        }
+        input:focus, select:focus {
+          border-color: var(--primary);
+        }
+        .btn-group {
+          display: flex;
+          gap: 8px;
+          margin-top: 6px;
+        }
+        .nav-day-group {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 10px;
+        }
+        .btn {
+          flex: 1;
+          background: var(--primary);
+          color: white;
+          border: none;
+          padding: 12px;
+          border-radius: 10px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 6px;
+        }
+        .btn:active {
+          background: var(--primary-dark);
+        }
+        .btn-pdf {
+          background: #0284c7;
+          color: white;
+          padding: 9px 12px;
+          border-radius: 8px;
+          font-size: 0.82rem;
+          font-weight: 700;
+          border: none;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          margin-bottom: 10px;
+          width: 100%;
+          justify-content: center;
+        }
+        .btn-pdf:active {
+          background: #0369a1;
+        }
+        .btn-nav-day {
+          background: #f1f5f9;
+          color: var(--text);
+          border: 1px solid var(--border);
+          padding: 9px;
+          font-size: 0.85rem;
+          font-weight: 600;
+        }
+        .btn-nav-day:active {
+          background: #e2e8f0;
+        }
+        .btn-danger {
+          flex: 0.45;
+          background: #fee2e2;
+          color: var(--danger-dark);
+          border: 1px solid #fca5a5;
+        }
+        .btn-danger:active {
+          background: #fecaca;
+        }
+        .btn-secondary {
+          width: 100%;
+          background: #e2e8f0;
+          color: #334155;
+        }
+        .btn-del-sm {
+          background: none;
+          border: none;
+          color: #ef4444;
+          font-size: 1rem;
+          cursor: pointer;
+          padding: 2px 6px;
+          border-radius: 4px;
+        }
+        .btn-del-sm:active {
+          background: #fee2e2;
+        }
+        .table-box {
+          max-height: 420px;
+          overflow-y: auto;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 0.82rem;
+          text-align: center;
+        }
+        th {
+          background: #f8fafc;
+          padding: 9px 4px;
+          font-weight: 700;
+          color: #475569;
+          position: sticky;
+          top: 0;
+          border-bottom: 1px solid var(--border);
+          z-index: 1;
+        }
+        td {
+          padding: 8px 4px;
+          border-bottom: 1px solid #f1f5f9;
+        }
+        tr:nth-child(even) {
+          background-color: #fafafa;
+        }
+        .nav-bar {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #fff;
+          border-top: 1px solid var(--border);
+          display: flex;
+          max-width: 600px;
+          margin: 0 auto;
+          z-index: 100;
+        }
+        .nav-btn {
+          flex: 1;
+          text-align: center;
+          padding: 10px 0;
+          font-size: 0.72rem;
+          color: var(--text-muted);
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3px;
+        }
+        .nav-btn.active {
+          color: var(--primary);
+          font-weight: 700;
+        }
+        .nav-btn span {
+          font-size: 1.15rem;
+        }
+        .view-panel {
+          display: none;
+        }
+        .view-panel.active {
+          display: block;
+        }
+        .tier-note {
+          font-size: 0.75rem;
+          color: #d81b60;
+          margin-top: -4px;
+          margin-bottom: 10px;
+          font-weight: 600;
+          text-align: right;
+        }
+        .app-footer {
+          text-align: center;
+          padding: 16px 8px 10px;
+          font-size: 0.78rem;
+          color: var(--text-muted);
+          line-height: 1.6;
+        }
+        .app-footer a {
+          color: var(--primary);
+          text-decoration: none;
+          font-weight: 600;
+        }
+        .toast {
+          position: fixed;
+          bottom: 85px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #1e293b;
+          color: white;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          display: none;
+          z-index: 200;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(15, 23, 42, 0.75);
+          backdrop-filter: blur(4px);
+          display: none;
+          justify-content: center;
+          align-items: center;
+          z-index: 999;
+          padding: 18px;
+        }
+        .modal-box {
+          background: #ffffff;
+          border-radius: 18px;
+          max-width: 440px;
+          width: 100%;
+          padding: 22px;
+          text-align: center;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+        .modal-icon {
+          font-size: 2.5rem;
+          margin-bottom: 10px;
+        }
+        .modal-title {
+          font-size: 1.15rem;
+          font-weight: 800;
+          color: #991b1b;
+          margin-bottom: 12px;
+        }
+        .modal-text {
+          font-size: 0.88rem;
+          line-height: 1.65;
+          color: #334155;
+          margin-bottom: 14px;
+          text-align: justify;
+          background: #fff1f2;
+          border: 1px solid #fecdd3;
+          padding: 12px;
+          border-radius: 10px;
+        }
+        .modal-btn {
+          width: 100%;
+          background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+          color: white;
+          border: none;
+          padding: 12px;
+          border-radius: 10px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          cursor: pointer;
+        }
+        .sub-section-title {
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: var(--primary);
+          margin-bottom: 8px;
+          margin-top: 10px;
+          border-right: 3px solid var(--primary);
+          padding-right: 6px;
+          text-align: right;
+        }
+        .static-alert-box {
+          border-radius: 12px;
+          padding: 13px;
+          margin-top: 12px;
+          font-size: 0.84rem;
+          line-height: 1.65;
+          text-align: justify;
+        }
+        .alert-danger-style {
+          background: #fff1f2;
+          border: 1px solid #fecdd3;
+          color: #334155;
+        }
+        .alert-warning-style {
+          background: #fffbeb;
+          border: 1px solid #fde68a;
+          color: #334155;
+        }
+        .alert-header {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-weight: 800;
+          margin-bottom: 6px;
+        }
+        .alert-danger-style .alert-header {
+          color: #991b1b;
+        }
+        .alert-warning-style .alert-header {
+          color: #b45309;
+        }
+
+        /* شاشة معاينة وتصدير الـ PDF الكاملة */
+        #print-area {
+          display: none;
+        }
+        body.printing-mode {
+          padding-bottom: 20px !important;
+          background: #ffffff !important;
+        }
+        body.printing-mode > *:not(#print-area) {
+          display: none !important;
+        }
+        body.printing-mode #print-area {
+          display: block !important;
+          background: #ffffff;
+          width: 100%;
+          max-width: 750px;
+          margin: 0 auto;
+        }
+        .print-toolbar {
+          position: sticky;
+          top: 0;
+          z-index: 999;
+          background: #1e293b;
+          padding: 12px;
+          display: flex;
+          gap: 8px;
+          justify-content: space-between;
+          align-items: center;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .print-toolbar button {
+          flex: 1;
+          border: none;
+          padding: 10px 8px;
+          border-radius: 8px;
+          font-size: 0.82rem;
+          font-weight: 700;
+          cursor: pointer;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+        }
+        .btn-save-pdf { background: #0284c7; }
+        .btn-share-pdf { background: #10b981; }
+        .btn-close-pdf { background: #ef4444; flex: 0.6 !important; }
+
+        @media print {
+          body {
+            background: #ffffff !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          body > *:not(#print-area) {
+            display: none !important;
+          }
+          #print-area {
+            display: block !important;
+            width: 100% !important;
+            padding: 0 !important;
+          }
+          .no-print-toolbar {
+            display: none !important;
+          }
+          @page {
+            margin: 1cm;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<!-- شاشة معاينة التقرير والطباعة والمشاركة -->
+<div id="print-area">
+    <div class="print-toolbar no-print-toolbar">
+        <button class="btn-save-pdf" onclick="executeSavePdf()">
+            <span>🖨️ حفظ PDF / طباعة</span>
+        </button>
+        <button class="btn-share-pdf" onclick="executeSharePdf()">
+            <span>📤 مشاركة وتنزيل</span>
+        </button>
+        <button class="btn-close-pdf" onclick="closePrintPreview()">
+            <span>🔙 رجوع</span>
+        </button>
+    </div>
+    <div id="print-report-body"></div>
+</div>
+
+<!-- نافذة تنبيه الخصوصية -->
+<div class="modal-overlay" id="privacy-modal">
+    <div class="modal-box">
+        <div class="modal-icon">🔒</div>
+        <div class="modal-title">تنبيه أمان وخصوصية البيانات</div>
+        <div class="modal-text">
+            <strong>لخصوصيتك التامة:</strong> يتم حفظ جميع البيانات محلياً على ذاكرة جهازك فقط، ولا توجد أي نسخة سحابية على خوادم خارجية.<br><br>
+            <strong>⚠️ تنبيه هام:</strong> في حال حذف التطبيق أو مسح بياناته من إعدادات الهاتف، <strong>سيتم حذف جميع البيانات المدخلة نهائياً</strong>. يرجى أخذ نسخة احتياطية دورية عبر زر "تصدير نسخة احتياطية" من قسم البيانات لاستعادتها بعد إعادة التثبيت.
+        </div>
+        <button class="modal-btn" onclick="closePrivacyModal()">متابعة</button>
+    </div>
+</div>
+
+<!-- نافذة تنبيه الإدخال اليدوي -->
+<div class="modal-overlay" id="manual-entry-modal">
+    <div class="modal-box">
+        <div class="modal-icon">⚠️</div>
+        <div class="modal-title" style="color: #b45309;">تذكير هام عند التسجيل</div>
+        <div class="modal-text" style="background: #fffbeb; border: 1px solid #fde68a;">
+            <strong>ملاحظة للمستخدم:</strong> يلزم إدخال وتحديد <strong>التاريخ واليوم يدوياً</strong> في كل مرة تقوم فيها بالحفظ، وذلك للتأكد من حفظ الطلبات تحت اليوم الصحيح بدقة.
+        </div>
+        <button class="modal-btn" style="background: linear-gradient(135deg, #d97706, #b45309);" onclick="closeManualModal()">فهمت ذلك، ابدأ</button>
+    </div>
+</div>
+
+<header>
+    <h1>حاسبة الطلبات</h1>
+    <span class="badge" id="hdr-month-badge">شهر 1 (يناير)</span>
+</header>
+
+<div class="container">
+
+    <!-- 1. شاشة اليومية -->
+    <div id="view-daily" class="view-panel active">
+        <div class="card">
+            <div class="card-title">
+                <span>تسجيل طلبات اليوم</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);" id="lbl-day-name"></span>
+            </div>
+
+            <div>
+                <label>الشهر</label>
+                <select id="sel-month" style="direction: rtl;" onchange="onMonthChange(this.value)"></select>
+            </div>
+
+            <div class="nav-day-group">
+                <button class="btn btn-nav-day" onclick="navigateDay(-1)">
+                    <span>➡️ اليوم السابق</span>
+                </button>
+                <button class="btn btn-nav-day" onclick="navigateDay(1)">
+                    <span>اليوم التالي ⬅️</span>
+                </button>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <label>اليوم</label>
+                    <select id="sel-day-name" style="direction: rtl;" onchange="onDayNameChange()">
+                        <option value="السبت">السبت</option>
+                        <option value="الأحد">الأحد</option>
+                        <option value="الاثنين">الاثنين</option>
+                        <option value="الثلاثاء">الثلاثاء</option>
+                        <option value="الأربعاء">الأربعاء</option>
+                        <option value="الخميس">الخميس</option>
+                        <option value="الجمعة">الجمعة</option>
+                    </select>
+                </div>
+                <div>
+                    <label>التاريخ (1 - 31)</label>
+                    <select id="sel-day-num" onchange="loadDayData()"></select>
+                </div>
+            </div>
+
+            <label>عدد طلبات اليوم</label>
+            <input type="number" id="inp-orders" placeholder="0" oninput="previewDailyCalc()">
+
+            <div class="tier-note" id="lbl-calc-breakdown">المبلغ المحسوب: 0 ريال</div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="saveDay()">
+                    <span>💾 حفظ اليوم</span>
+                </button>
+                <button class="btn btn-danger" onclick="deleteCurrentDay()" title="حذف إدخال هذا اليوم">
+                    <span>🗑️ حذف</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">حصيلة الشهر حتى الآن</div>
+
+            <div class="grid-3" style="margin-bottom: 8px;">
+                <div class="stat-box">
+                    <div class="stat-label">مجموع الطلبات</div>
+                    <div class="stat-val" id="q-total-orders">0</div>
+                </div>
+                <div class="stat-box highlight">
+                    <div class="stat-label">مبلغ الطلبات</div>
+                    <div class="stat-val" id="q-total-amount">0 ر.س</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">البونص المتوقع</div>
+                    <div class="stat-val" id="q-bonus">0 ر.س</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="stat-box">
+                    <div class="stat-label">بدل البنزين</div>
+                    <div class="stat-val" id="q-gas">0 ر.س</div>
+                </div>
+                <div class="stat-box highlight">
+                    <div class="stat-label">المجموع الكلي</div>
+                    <div class="stat-val" id="q-total-all">0 ر.س</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. شاشة كشف الشهر -->
+    <div id="view-month" class="view-panel">
+        <div class="card">
+            <div class="card-title">
+                <span>كشف الشهر:</span>
+                <select id="sel-view-month" style="width: auto; margin-bottom: 0; padding: 4px 8px; direction: rtl;" onchange="onMonthChange(this.value)"></select>
+            </div>
+
+            <button class="btn-pdf" onclick="exportMonthToPDF()">
+                <span>📄 معاينة وتصدير بيانات الشهر PDF</span>
+            </button>
+
+            <div class="grid-2" style="margin-bottom: 10px;">
+                <div class="stat-box">
+                    <div class="stat-label">إجمالي الطلبات</div>
+                    <div class="stat-val" id="m-orders">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">مبلغ الطلبات</div>
+                    <div class="stat-val" id="m-amount">0 ر.س</div>
+                </div>
+            </div>
+
+            <div class="grid-3" style="margin-bottom: 12px;">
+                <div class="stat-box">
+                    <div class="stat-label">البونص</div>
+                    <div class="stat-val" id="m-bonus">0 ر.س</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">البنزين</div>
+                    <div class="stat-val" id="m-gas">0 ر.س</div>
+                </div>
+                <div class="stat-box highlight">
+                    <div class="stat-label">المجموع الكلي</div>
+                    <div class="stat-val" id="m-total">0 ر.س</div>
+                </div>
+            </div>
+
+            <div class="table-box">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>اليوم</th>
+                        <th>التاريخ</th>
+                        <th>العدد</th>
+                        <th>المبلغ</th>
+                        <th>إجراء</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbl-days-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. شاشة كشف السنة -->
+    <div id="view-year" class="view-panel">
+        <div class="card">
+            <div class="card-title">دخل السنة</div>
+
+            <button class="btn-pdf" onclick="exportYearToPDF()">
+                <span>📄 معاينة وتصدير دخل السنة PDF</span>
+            </button>
+
+            <div class="table-box">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>الشهر</th>
+                        <th>العدد</th>
+                        <th>المبلغ</th>
+                        <th>البونص</th>
+                        <th>البنزين</th>
+                        <th>المجموع</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbl-year-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. شاشة الإعدادات المخصصة -->
+    <div id="view-config" class="view-panel">
+        <div class="card">
+            <div class="card-title">إعدادات أسعار وحسابات الطلبات</div>
+
+            <div class="sub-section-title">سعر الطلبات الأساسي والإضافي</div>
+            <div class="grid-3">
+                <div>
+                    <label>حد الطلبات</label>
+                    <input type="number" id="cfg-tier1-limit" value="330">
+                </div>
+                <div>
+                    <label>السعر الأولي</label>
+                    <input type="number" id="cfg-tier1-rate" value="11">
+                </div>
+                <div>
+                    <label>سعر ما زاد (ر.س)</label>
+                    <input type="number" id="cfg-tier2-rate" value="12">
+                </div>
+            </div>
+
+            <div class="sub-section-title">شروط ومبالغ البونص (3 مستويات)</div>
+            <div class="grid-2">
+                <div>
+                    <label>المستوى 1 (عدد الطلبات)</label>
+                    <input type="number" id="cfg-b1-orders" value="330">
+                </div>
+                <div>
+                    <label>مبلغ البونص (ر.س)</label>
+                    <input type="number" id="cfg-b1-amount" value="200">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label>المستوى 2 (عدد الطلبات)</label>
+                    <input type="number" id="cfg-b2-orders" value="400">
+                </div>
+                <div>
+                    <label>مبلغ البونص (ر.س)</label>
+                    <input type="number" id="cfg-b2-amount" value="300">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label>المستوى 3 (عدد الطلبات)</label>
+                    <input type="number" id="cfg-b3-orders" value="500">
+                </div>
+                <div>
+                    <label>مبلغ البونص (ر.س)</label>
+                    <input type="number" id="cfg-b3-amount" value="400">
+                </div>
+            </div>
+
+            <div class="sub-section-title">شروط ومبالغ بدل البنزين (3 مستويات)</div>
+            <div class="grid-2">
+                <div>
+                    <label>المستوى 1 (عدد الطلبات)</label>
+                    <input type="number" id="cfg-g1-orders" value="330">
+                </div>
+                <div>
+                    <label>بدل البنزين (ر.س)</label>
+                    <input type="number" id="cfg-g1-amount" value="500">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label>المستوى 2 (عدد الطلبات)</label>
+                    <input type="number" id="cfg-g2-orders" value="400">
+                </div>
+                <div>
+                    <label>بدل البنزين (ر.س)</label>
+                    <input type="number" id="cfg-g2-amount" value="600">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label>المستوى 3 (عدد الطلبات)</label>
+                    <input type="number" id="cfg-g3-orders" value="500">
+                </div>
+                <div>
+                    <label>بدل البنزين (ر.س)</label>
+                    <input type="number" id="cfg-g3-amount" value="700">
+                </div>
+            </div>
+
+            <button class="btn" style="margin-top:10px;" onclick="saveConfigSettings()">
+                <span>💾 حفظ الإعدادات وتطبيقها فوراً</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 5. شاشة النسخ الاحتياطي وإدارة البيانات -->
+    <div id="view-settings" class="view-panel">
+        <div class="card">
+            <div class="card-title">النسخ الاحتياطي وإدارة البيانات</div>
+
+            <div class="grid-2" style="margin-bottom: 8px;">
+                <button class="btn-pdf" style="margin-bottom:0;" onclick="exportMonthToPDF()">
+                    <span>📄 تصدير الشهر PDF</span>
+                </button>
+                <button class="btn-pdf" style="margin-bottom:0;" onclick="exportYearToPDF()">
+                    <span>📄 تصدير السنة PDF</span>
+                </button>
+            </div>
+
+            <p style="font-size:0.82rem; color:var(--text-muted); margin: 10px 0 12px; text-align: right;">
+                جميع البيانات تُحفظ محلياً على هاتفك دون الحاجة لإنترنت. يمكنك حفظ نسخة كملف أو استعادتها بأي وقت.
+            </p>
+            <button class="btn btn-secondary" style="margin-bottom: 8px;" onclick="exportData()">💾 تصدير نسخة احتياطية (ملف)</button>
+            <button class="btn btn-secondary" style="margin-bottom: 8px;" onclick="document.getElementById('file-import').click()">📂 استيراد نسخة سابقة</button>
+            <input type="file" id="file-import" style="display:none;" onchange="importData(event)" accept=".json">
+            <button class="btn btn-danger" style="width:100%; margin-top:6px;" onclick="clearAllData()">⚠️ مسح كافة البيانات وإعادة التعيين</button>
+
+            <div class="static-alert-box alert-danger-style">
+                <div class="alert-header">
+                    <span>🔒</span>
+                    <span>تنبيه أمان وخصوصية البيانات</span>
+                </div>
+                <strong>لخصوصيتك التامة:</strong> يتم حفظ جميع البيانات محلياً على ذاكرة جهازك فقط، ولا توجد أي نسخة سحابية على خوادم خارجية.<br><br>
+                <strong>⚠️ تنبيه هام:</strong> في حال حذف التطبيق أو مسح بياناته من إعدادات الهاتف، <strong>سيتم حذف جميع البيانات المدخلة نهائياً</strong>. يرجى أخذ نسخة احتياطية دورية عبر زر "تصدير نسخة احتياطية" أعلاه لاستعادتها بعد إعادة التثبيت.
+            </div>
+
+            <div class="static-alert-box alert-warning-style">
+                <div class="alert-header">
+                    <span>⚠️</span>
+                    <span>تذكير هام عند التسجيل</span>
+                </div>
+                <strong>ملاحظة للمستخدم:</strong> يلزم إدخال وتحديد <strong>التاريخ واليوم يدوياً</strong> في كل مرة تقوم فيها بالحفظ، وذلك للتأكد من حفظ الطلبات تحت اليوم الصحيح بدقة.
+            </div>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <div class="card-title" style="justify-content: center;">حول التطبيق والحقوق</div>
+            <p style="font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 4px;">
+                تطبيق حاسبة الطلبات
+            </p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;">
+                جميع الحقوق محفوظة © للمطور: <strong style="color: var(--primary);">وليد سيد</strong>
+            </p>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">
+                للتواصل والدعم: <a href="mailto:alwadhi555@gmail.com" style="color: var(--primary); font-weight: 600;">alwadhi555@gmail.com</a>
+            </p>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <div>تصميم وتطوير: <strong>وليد سيد</strong></div>
+        <div><a href="mailto:alwadhi555@gmail.com">alwadhi555@gmail.com</a></div>
+        <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 2px;">جميع الحقوق محفوظة ©</div>
+    </footer>
+
+</div>
+
+<div class="toast" id="toast-msg"></div>
+
+<nav class="nav-bar">
+    <div class="nav-btn active" onclick="navigate('daily', this)">
+        <span>📝</span>اليومية
+    </div>
+    <div class="nav-btn" onclick="navigate('month', this)">
+        <span>📅</span>كشف الشهر
+    </div>
+    <div class="nav-btn" onclick="navigate('year', this)">
+        <span>📊</span>كامل السنة
+    </div>
+    <div class="nav-btn" onclick="navigate('config', this)">
+        <span>⚙️</span>الإعدادات
+    </div>
+    <div class="nav-btn" onclick="navigate('settings', this)">
+        <span>💾</span>البيانات
+    </div>
+</nav>
+
+<script>
+    const MONTHS = [
+      { id: "m-01", num: 1, name: "شهر 1 (يناير)" },
+      { id: "m-02", num: 2, name: "شهر 2 (فبراير)" },
+      { id: "m-03", num: 3, name: "شهر 3 (مارس)" },
+      { id: "m-04", num: 4, name: "شهر 4 (أبريل)" },
+      { id: "m-05", num: 5, name: "شهر 5 (مايو)" },
+      { id: "m-06", num: 6, name: "شهر 6 (يونيو)" },
+      { id: "m-07", num: 7, name: "شهر 7 (يوليو)" },
+      { id: "m-08", num: 8, name: "شهر 8 (أغسطس)" },
+      { id: "m-09", num: 9, name: "شهر 9 (سبتمبر)" },
+      { id: "m-10", num: 10, name: "شهر 10 (أكتوبر)" },
+      { id: "m-11", num: 11, name: "شهر 11 (نوفمبر)" },
+      { id: "m-12", num: 12, name: "شهر 12 (ديسمبر)" }
+    ];
+
+    const DAYS_ORDER = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
+    let db = {};
+    let currentReportTitle = "تقرير_الطلبات";
+
+    let appConfig = {
+      tier1Limit: 330,
+      tier1Rate: 11,
+      tier2Rate: 12,
+      bonusTier1Orders: 330,
+      bonusTier1Amount: 200,
+      bonusTier2Orders: 400,
+      bonusTier2Amount: 300,
+      bonusTier3Orders: 500,
+      bonusTier3Amount: 400,
+      gasTier1Orders: 330,
+      gasTier1Amount: 500,
+      gasTier2Orders: 400,
+      gasTier2Amount: 600,
+      gasTier3Orders: 500,
+      gasTier3Amount: 700
+    };
+
+    function saveLastState() {
+      const state = {
+        month: document.getElementById('sel-month').value,
+        dayNum: parseInt(document.getElementById('sel-day-num').value) || 1,
+        dayName: document.getElementById('sel-day-name').value
+      };
+      localStorage.setItem('orders_last_state', JSON.stringify(state));
+    }
+
+    function init() {
+      showPrivacyModal();
+
+      const storedConfig = localStorage.getItem('orders_app_config');
+      if (storedConfig) {
+        try { appConfig = Object.assign(appConfig, JSON.parse(storedConfig)); } catch(e){}
+      }
+      loadConfigInputs();
+
+      const stored = localStorage.getItem('orders_calc_db');
+      if (stored) {
+        try { db = JSON.parse(stored); } catch(e) { db = {}; }
+      }
+      MONTHS.forEach(m => {
+        if (!db[m.id]) db[m.id] = { days: {} };
+      });
+
+      const s1 = document.getElementById('sel-month');
+      const s2 = document.getElementById('sel-view-month');
+      s1.innerHTML = '';
+      s2.innerHTML = '';
+      MONTHS.forEach(m => {
+        s1.innerHTML += `<option value="${m.id}">${m.name}</option>`;
+        s2.innerHTML += `<option value="${m.id}">${m.name}</option>`;
+      });
+
+      let savedMonth = "m-01";
+      let savedDayNum = 1;
+      let savedDayName = "السبت";
+
+      const lastStateRaw = localStorage.getItem('orders_last_state');
+      if (lastStateRaw) {
+        try {
+          const lastState = JSON.parse(lastStateRaw);
+          if (lastState.month && MONTHS.some(m => m.id === lastState.month)) {
+            savedMonth = lastState.month;
+          }
+          if (lastState.dayNum && lastState.dayNum >= 1 && lastState.dayNum <= 31) {
+            savedDayNum = lastState.dayNum;
+          }
+          if (lastState.dayName && DAYS_ORDER.includes(lastState.dayName)) {
+            savedDayName = lastState.dayName;
+          }
+        } catch (e) {}
+      }
+
+      s1.value = savedMonth;
+      s2.value = savedMonth;
+      const mObj = MONTHS.find(m => m.id === savedMonth);
+      if (mObj) document.getElementById('hdr-month-badge').innerText = mObj.name;
+
+      document.getElementById('sel-day-name').value = savedDayName;
+      populateDatesDropdown(savedDayNum);
+
+      loadDayData();
+      renderMonthView();
+      renderYearView();
+    }
+
+    function loadConfigInputs() {
+      document.getElementById('cfg-tier1-limit').value = appConfig.tier1Limit;
+      document.getElementById('cfg-tier1-rate').value = appConfig.tier1Rate;
+      document.getElementById('cfg-tier2-rate').value = appConfig.tier2Rate;
+
+      document.getElementById('cfg-b1-orders').value = appConfig.bonusTier1Orders;
+      document.getElementById('cfg-b1-amount').value = appConfig.bonusTier1Amount;
+      document.getElementById('cfg-b2-orders').value = appConfig.bonusTier2Orders;
+      document.getElementById('cfg-b2-amount').value = appConfig.bonusTier2Amount;
+      document.getElementById('cfg-b3-orders').value = appConfig.bonusTier3Orders;
+      document.getElementById('cfg-b3-amount').value = appConfig.bonusTier3Amount;
+
+      document.getElementById('cfg-g1-orders').value = appConfig.gasTier1Orders;
+      document.getElementById('cfg-g1-amount').value = appConfig.gasTier1Amount;
+      document.getElementById('cfg-g2-orders').value = appConfig.gasTier2Orders;
+      document.getElementById('cfg-g2-amount').value = appConfig.gasTier2Amount;
+      document.getElementById('cfg-g3-orders').value = appConfig.gasTier3Orders;
+      document.getElementById('cfg-g3-amount').value = appConfig.gasTier3Amount;
+    }
+
+    function saveConfigSettings() {
+      appConfig.tier1Limit = parseInt(document.getElementById('cfg-tier1-limit').value) || 0;
+      appConfig.tier1Rate = parseFloat(document.getElementById('cfg-tier1-rate').value) || 0;
+      appConfig.tier2Rate = parseFloat(document.getElementById('cfg-tier2-rate').value) || 0;
+
+      appConfig.bonusTier1Orders = parseInt(document.getElementById('cfg-b1-orders').value) || 0;
+      appConfig.bonusTier1Amount = parseFloat(document.getElementById('cfg-b1-amount').value) || 0;
+      appConfig.bonusTier2Orders = parseInt(document.getElementById('cfg-b2-orders').value) || 0;
+      appConfig.bonusTier2Amount = parseFloat(document.getElementById('cfg-b2-amount').value) || 0;
+      appConfig.bonusTier3Orders = parseInt(document.getElementById('cfg-b3-orders').value) || 0;
+      appConfig.bonusTier3Amount = parseFloat(document.getElementById('cfg-b3-amount').value) || 0;
+
+      appConfig.gasTier1Orders = parseInt(document.getElementById('cfg-g1-orders').value) || 0;
+      appConfig.gasTier1Amount = parseFloat(document.getElementById('cfg-g1-amount').value) || 0;
+      appConfig.gasTier2Orders = parseInt(document.getElementById('cfg-g2-orders').value) || 0;
+      appConfig.gasTier2Amount = parseFloat(document.getElementById('cfg-g2-amount').value) || 0;
+      appConfig.gasTier3Orders = parseInt(document.getElementById('cfg-g3-orders').value) || 0;
+      appConfig.gasTier3Amount = parseFloat(document.getElementById('cfg-g3-amount').value) || 0;
+
+      localStorage.setItem('orders_app_config', JSON.stringify(appConfig));
+
+      loadDayData();
+      renderMonthView();
+      renderYearView();
+      showToast('تم حفظ الإعدادات وتحديث الحسابات بنجاح!');
+    }
+
+    function showPrivacyModal() {
+      document.getElementById('privacy-modal').style.display = 'flex';
+    }
+
+    function closePrivacyModal() {
+      document.getElementById('privacy-modal').style.display = 'none';
+      document.getElementById('manual-entry-modal').style.display = 'flex';
+    }
+
+    function closeManualModal() {
+      document.getElementById('manual-entry-modal').style.display = 'none';
+    }
+
+    function populateDatesDropdown(keepDate = 1) {
+      const selDayNum = document.getElementById('sel-day-num');
+      selDayNum.innerHTML = '';
+      for (let d = 1; d <= 31; d++) {
+        selDayNum.innerHTML += `<option value="${d}">${d}</option>`;
+      }
+      selDayNum.value = keepDate;
+    }
+
+    function navigateDay(step) {
+      const selDayNum = document.getElementById('sel-day-num');
+      const selDayName = document.getElementById('sel-day-name');
+
+      let currentDay = parseInt(selDayNum.value) || 1;
+      let newDay = currentDay + step;
+
+      if (newDay < 1) {
+        showToast('هذا أول يوم في الشهر (1)');
+        return;
+      }
+      if (newDay > 31) {
+        showToast('هذا آخر يوم في الشهر (31)');
+        return;
+      }
+
+      selDayNum.value = newDay;
+
+      const mId = document.getElementById('sel-month').value;
+      const dayData = (db[mId] && db[mId].days && db[mId].days[newDay]) ? db[mId].days[newDay] : null;
+
+      if (dayData && dayData.dayName) {
+        selDayName.value = dayData.dayName;
+      } else {
+        let currentIdx = DAYS_ORDER.indexOf(selDayName.value);
+        if (currentIdx !== -1) {
+          let nextIdx = (currentIdx + step) % DAYS_ORDER.length;
+          if (nextIdx < 0) nextIdx += DAYS_ORDER.length;
+          selDayName.value = DAYS_ORDER[nextIdx];
+        }
+      }
+
+      loadDayData();
+    }
+
+    function onMonthChange(mId) {
+      document.getElementById('sel-month').value = mId;
+      document.getElementById('sel-view-month').value = mId;
+      const mObj = MONTHS.find(m => m.id === mId);
+      document.getElementById('hdr-month-badge').innerText = mObj.name;
+
+      loadDayData();
+      renderMonthView();
+    }
+
+    function onDayNameChange() {
+      const dayName = document.getElementById('sel-day-name').value;
+      const dateNum = document.getElementById('sel-day-num').value;
+      document.getElementById('lbl-day-name').innerText = `${dayName} (${dateNum})`;
+      saveLastState();
+    }
+
+    function calculateDailyAmountFromPrior(priorOrders, dayOrders) {
+      if (dayOrders <= 0) return 0;
+      const limit = appConfig.tier1Limit;
+      const r1 = appConfig.tier1Rate;
+      const r2 = appConfig.tier2Rate;
+
+      const newTotal = priorOrders + dayOrders;
+      if (newTotal <= limit) {
+        return dayOrders * r1;
+      } else if (priorOrders >= limit) {
+        return dayOrders * r2;
+      } else {
+        const atR1 = limit - priorOrders;
+        const atR2 = newTotal - limit;
+        return (atR1 * r1) + (atR2 * r2);
+      }
+    }
+
+    function getPriorOrders(mId, targetDay) {
+      let sum = 0;
+      const days = (db[mId] && db[mId].days) ? db[mId].days : {};
+      for (let d = 1; d < targetDay; d++) {
+        if (days[d] && days[d].orders !== undefined && days[d].orders !== '') {
+          sum += Number(days[d].orders);
+        }
+      }
+      return sum;
+    }
+
+    function loadDayData() {
+      const mId = document.getElementById('sel-month').value;
+      const dayNum = parseInt(document.getElementById('sel-day-num').value) || 1;
+
+      const dayData = (db[mId] && db[mId].days && db[mId].days[dayNum] !== undefined) ? db[mId].days[dayNum] : null;
+
+      if (dayData && dayData.dayName) {
+        document.getElementById('sel-day-name').value = dayData.dayName;
+      }
+
+      const currentDayName = document.getElementById('sel-day-name').value;
+      document.getElementById('lbl-day-name').innerText = `${currentDayName} (${dayNum})`;
+      document.getElementById('inp-orders').value = (dayData && dayData.orders !== undefined) ? dayData.orders : '';
+
+      saveLastState();
+      previewDailyCalc();
+      updateQuickSummary(mId);
+    }
+
+    function previewDailyCalc() {
+      const mId = document.getElementById('sel-month').value;
+      const dayNum = parseInt(document.getElementById('sel-day-num').value) || 1;
+      const orders = parseInt(document.getElementById('inp-orders').value) || 0;
+      const prior = getPriorOrders(mId, dayNum);
+      const amt = calculateDailyAmountFromPrior(prior, orders);
+
+      document.getElementById('lbl-calc-breakdown').innerText =
+        `المبلغ المحسوب: ${amt} ريال (الطلبات التراكمية السابقة: ${prior})`;
+    }
+
+    function saveDay() {
+      const mId = document.getElementById('sel-month').value;
+      const dayNum = parseInt(document.getElementById('sel-day-num').value) || 1;
+      const dayName = document.getElementById('sel-day-name').value;
+      const ordersVal = document.getElementById('inp-orders').value;
+
+      if (ordersVal === '') {
+        showToast('يرجى إدخال عدد الطلبات');
+        return;
+      }
+
+      if (!db[mId]) db[mId] = { days: {} };
+      if (!db[mId].days) db[mId].days = {};
+
+      db[mId].days[dayNum] = {
+        orders: parseInt(ordersVal) || 0,
+        dayName: dayName
+      };
+
+      saveDB();
+      saveLastState();
+      renderMonthView();
+      renderYearView();
+      updateQuickSummary(mId);
+      showToast(`تم حفظ طلبات يوم ${dayName} (${dayNum}) بنجاح!`);
+    }
+
+    function deleteCurrentDay() {
+      const mId = document.getElementById('sel-month').value;
+      const dayNum = parseInt(document.getElementById('sel-day-num').value) || 1;
+
+      if (confirm(`هل أنت متأكد من حذف بيانات تاريخ ${dayNum}؟`)) {
+        if (db[mId] && db[mId].days && db[mId].days[dayNum] !== undefined) {
+          delete db[mId].days[dayNum];
+          saveDB();
+        }
+        document.getElementById('inp-orders').value = '';
+        previewDailyCalc();
+        renderMonthView();
+        renderYearView();
+        updateQuickSummary(mId);
+        showToast(`تم حذف بيانات تاريخ ${dayNum}`);
+      }
+    }
+
+    function deleteDayDirect(dayNum) {
+      const mId = document.getElementById('sel-view-month').value;
+      if (confirm(`هل تريد حذف بيانات تاريخ ${dayNum} من هذا الشهر؟`)) {
+        if (db[mId] && db[mId].days && db[mId].days[dayNum] !== undefined) {
+          delete db[mId].days[dayNum];
+          saveDB();
+        }
+        loadDayData();
+        renderMonthView();
+        renderYearView();
+        updateQuickSummary(mId);
+        showToast(`تم حذف تاريخ ${dayNum}`);
+      }
+    }
+
+    function updateQuickSummary(mId) {
+      const stats = calcMonthStats(mId);
+      document.getElementById('q-total-orders').innerText = stats.totalOrders;
+      document.getElementById('q-total-amount').innerText = stats.totalAmount + ' ر.س';
+      document.getElementById('q-bonus').innerText = stats.bonus + ' ر.س';
+      document.getElementById('q-gas').innerText = stats.gas + ' ر.س';
+      document.getElementById('q-total-all').innerText = stats.totalAll + ' ر.س';
+    }
+
+    function calcMonthStats(mId) {
+      const days = (db[mId] && db[mId].days) ? db[mId].days : {};
+      let totalOrders = 0;
+      let totalAmount = 0;
+      let runningOrders = 0;
+
+      for (let d = 1; d <= 31; d++) {
+        if (days[d] && days[d].orders !== undefined && days[d].orders !== '') {
+          const ord = Number(days[d].orders);
+          const amt = calculateDailyAmountFromPrior(runningOrders, ord);
+          runningOrders += ord;
+          totalOrders += ord;
+          totalAmount += amt;
+        }
+      }
+
+      let bonus = 0;
+      if (totalOrders >= appConfig.bonusTier3Orders) {
+        bonus = appConfig.bonusTier3Amount;
+      } else if (totalOrders >= appConfig.bonusTier2Orders) {
+        bonus = appConfig.bonusTier2Amount;
+      } else if (totalOrders >= appConfig.bonusTier1Orders) {
+        bonus = appConfig.bonusTier1Amount;
+      }
+
+      let gas = 0;
+      if (totalOrders >= appConfig.gasTier3Orders) {
+        gas = appConfig.gasTier3Amount;
+      } else if (totalOrders >= appConfig.gasTier2Orders) {
+        gas = appConfig.gasTier2Amount;
+      } else if (totalOrders >= appConfig.gasTier1Orders) {
+        gas = appConfig.gasTier1Amount;
+      }
+
+      const totalAll = totalAmount + bonus + gas;
+      return { totalOrders, totalAmount, bonus, gas, totalAll };
+    }
+
+    function renderMonthView() {
+      const mId = document.getElementById('sel-view-month').value;
+      const mObj = MONTHS.find(m => m.id === mId);
+      const days = (db[mId] && db[mId].days) ? db[mId].days : {};
+      const tbody = document.getElementById('tbl-days-body');
+      tbody.innerHTML = '';
+
+      let runningOrders = 0;
+      let totalOrders = 0;
+      let totalAmount = 0;
+
+      for (let d = 1; d <= 31; d++) {
+        const hasData = days[d] && days[d].orders !== undefined && days[d].orders !== '';
+        const dayName = (hasData && days[d].dayName) ? days[d].dayName : '-';
+        const dateStr = `${String(mObj.num).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+        let ordStr = '-';
+        let amtStr = '-';
+        let actionBtn = '';
+
+        if (hasData) {
+          const ord = Number(days[d].orders);
+          const amt = calculateDailyAmountFromPrior(runningOrders, ord);
+          runningOrders += ord;
+          totalOrders += ord;
+          totalAmount += amt;
+          ordStr = ord;
+          amtStr = amt;
+          actionBtn = `<button class="btn-del-sm" onclick="deleteDayDirect(${d})" title="حذف">🗑️</button>`;
+        }
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${dayName}</td>
+            <td>${dateStr}</td>
+            <td>${ordStr}</td>
+            <td>${amtStr}</td>
+            <td>${actionBtn}</td>
+          </tr>
+        `;
+      }
+
+      const stats = calcMonthStats(mId);
+      document.getElementById('m-orders').innerText = stats.totalOrders;
+      document.getElementById('m-amount').innerText = stats.totalAmount + ' ر.س';
+      document.getElementById('m-bonus').innerText = stats.bonus + ' ر.س';
+      document.getElementById('m-gas').innerText = stats.gas + ' ر.س';
+      document.getElementById('m-total').innerText = stats.totalAll + ' ر.س';
+    }
+
+    function renderYearView() {
+      const tbody = document.getElementById('tbl-year-body');
+      tbody.innerHTML = '';
+
+      let yOrders = 0, yAmount = 0, yBonus = 0, yGas = 0, yTotal = 0;
+
+      MONTHS.forEach(m => {
+        const s = calcMonthStats(m.id);
+        yOrders += s.totalOrders;
+        yAmount += s.totalAmount;
+        yBonus += s.bonus;
+        yGas += s.gas;
+        yTotal += s.totalAll;
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${m.name}</td>
+            <td>${s.totalOrders || '-'}</td>
+            <td>${s.totalAmount || '-'}</td>
+            <td>${s.bonus || '-'}</td>
+            <td>${s.gas || '-'}</td>
+            <td style="font-weight:bold; color:var(--primary);">${s.totalAll || '-'}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML += `
+        <tr style="background:#e0f2fe; font-weight:bold;">
+          <td>حصيلة السنة</td>
+          <td>${yOrders}</td>
+          <td>${yAmount}</td>
+          <td>${yBonus}</td>
+          <td>${yGas}</td>
+          <td style="color:#0369a1;">${yTotal}</td>
+        </tr>
+      `;
+    }
+
+    // فتح شاشة المعاينة الثابتة للتقرير الكامل
+    function triggerPrintReport(title, htmlContent) {
+      currentReportTitle = title;
+      document.getElementById('print-report-body').innerHTML = htmlContent;
+      document.body.classList.add('printing-mode');
+      window.scrollTo(0, 0);
+    }
+
+    // زر الحفظ كـ PDF / الطباعة
+    function executeSavePdf() {
+      const toolbar = document.querySelector('.print-toolbar');
+      toolbar.style.display = 'none';
+      setTimeout(() => {
+        if (window.AndroidPrint && typeof window.AndroidPrint.printPage === "function") {
+          window.AndroidPrint.printPage(currentReportTitle);
+        } else {
+          window.print();
+        }
+        setTimeout(() => {
+          toolbar.style.display = 'flex';
+        }, 1200);
+      }, 150);
+    }
+
+    // زر المشاركة والتنزيل المباشر
+    function executeSharePdf() {
+      const toolbar = document.querySelector('.print-toolbar');
+      toolbar.style.display = 'none';
+      setTimeout(() => {
+        if (window.AndroidPrint && typeof window.AndroidPrint.sharePdf === "function") {
+          window.AndroidPrint.sharePdf(currentReportTitle);
+        } else if (window.AndroidPrint && typeof window.AndroidPrint.printPage === "function") {
+          window.AndroidPrint.printPage(currentReportTitle);
+        } else {
+          window.print();
+        }
+        setTimeout(() => {
+          toolbar.style.display = 'flex';
+        }, 1200);
+      }, 150);
+    }
+
+    // زر إغلاق المعاينة والعودة للتطبيق
+    function closePrintPreview() {
+      document.body.classList.remove('printing-mode');
+      document.getElementById('print-report-body').innerHTML = '';
+    }
+
+    function exportMonthToPDF() {
+      const mId = document.getElementById('sel-view-month').value;
+      const mObj = MONTHS.find(m => m.id === mId);
+      const days = (db[mId] && db[mId].days) ? db[mId].days : {};
+      const stats = calcMonthStats(mId);
+
+      let rowsHtml = '';
+      let runningOrders = 0;
+
+      for (let d = 1; d <= 31; d++) {
+        const hasData = days[d] && days[d].orders !== undefined && days[d].orders !== '';
+        const dayName = (hasData && days[d].dayName) ? days[d].dayName : '-';
+        const dateStr = `${String(mObj.num).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        let ordStr = '-';
+        let amtStr = '-';
+
+        if (hasData) {
+          const ord = Number(days[d].orders);
+          const amt = calculateDailyAmountFromPrior(runningOrders, ord);
+          runningOrders += ord;
+          ordStr = ord;
+          amtStr = amt + ' ر.س';
+        }
+
+        rowsHtml += `
+          <tr>
+            <td style="border: 1px solid #cbd5e1; padding: 7px;">${dayName}</td>
+            <td style="border: 1px solid #cbd5e1; padding: 7px;">${dateStr}</td>
+            <td style="border: 1px solid #cbd5e1; padding: 7px;">${ordStr}</td>
+            <td style="border: 1px solid #cbd5e1; padding: 7px;">${amtStr}</td>
+          </tr>
+        `;
+      }
+
+      const printContent = `
+        <div style="font-family: system-ui, -apple-system, sans-serif; direction: rtl; color: #1e293b; padding: 14px;">
+          <div style="text-align: center; border-bottom: 2px solid #c2185b; padding-bottom: 12px; margin-bottom: 15px;">
+            <h1 style="font-size: 20px; margin: 0; color: #c2185b;">تقرير كشف الحساب الشهري</h1>
+            <h2 style="font-size: 15px; margin: 5px 0; color: #475569;">${mObj.name}</h2>
+          </div>
+          <div style="display: flex; justify-content: space-around; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 16px; text-align: center;">
+            <div style="flex: 1;"><div style="font-size: 12px; color: #64748b;">إجمالي الطلبات</div><div style="font-size: 16px; font-weight: bold; margin-top: 4px; color: #0f172a;">${stats.totalOrders}</div></div>
+            <div style="flex: 1;"><div style="font-size: 12px; color: #64748b;">مبلغ الطلبات</div><div style="font-size: 16px; font-weight: bold; margin-top: 4px; color: #0f172a;">${stats.totalAmount} ر.س</div></div>
+            <div style="flex: 1;"><div style="font-size: 12px; color: #64748b;">البونص</div><div style="font-size: 16px; font-weight: bold; margin-top: 4px; color: #0f172a;">${stats.bonus} ر.س</div></div>
+            <div style="flex: 1;"><div style="font-size: 12px; color: #64748b;">بدل البنزين</div><div style="font-size: 16px; font-weight: bold; margin-top: 4px; color: #0f172a;">${stats.gas} ر.س</div></div>
+            <div style="flex: 1;"><div style="font-size: 12px; color: #64748b;">المجموع الكلي</div><div style="font-size: 16px; font-weight: bold; margin-top: 4px; color: #c2185b;">${stats.totalAll} ر.س</div></div>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; text-align: center;">
+            <thead>
+              <tr style="background: #f1f5f9; font-weight: bold;">
+                <th style="border: 1px solid #cbd5e1; padding: 7px;">اليوم</th>
+                <th style="border: 1px solid #cbd5e1; padding: 7px;">التاريخ</th>
+                <th style="border: 1px solid #cbd5e1; padding: 7px;">عدد الطلبات</th>
+                <th style="border: 1px solid #cbd5e1; padding: 7px;">المبلغ المحسوب</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+          <div style="margin-top: 25px; text-align: center; font-size: 11px; color: #94a3b8;">تم استخراج هذا التقرير عبر تطبيق حاسبة الطلبات © وليد سيد</div>
+        </div>
+      `;
+
+      triggerPrintReport(`كشف_${mObj.name}`, printContent);
+    }
+
+    function exportYearToPDF() {
+      let rowsHtml = '';
+      let yOrders = 0, yAmount = 0, yBonus = 0, yGas = 0, yTotal = 0;
+
+      MONTHS.forEach(m => {
+        const s = calcMonthStats(m.id);
+        yOrders += s.totalOrders;
+        yAmount += s.totalAmount;
+        yBonus += s.bonus;
+        yGas += s.gas;
+        yTotal += s.totalAll;
+
+        rowsHtml += `
+          <tr>
+            <td style="border: 1px solid #cbd5e1; padding: 9px;">${m.name}</td>
+            <td style="border: 1px solid #cbd5e1; padding: 9px;">${s.totalOrders || '-'}</td>
+            <td style="border: 1px solid #cbd5e1; padding: 9px;">${s.totalAmount ? s.totalAmount + ' ر.س' : '-'}</td>
+            <td style="border: 1px solid #cbd5e1; padding: 9px;">${s.bonus ? s.bonus + ' ر.س' : '-'}</td>
+            <td style="border: 1px solid #cbd5e1; padding: 9px;">${s.gas ? s.gas + ' ر.س' : '-'}</td>
+            <td style="border: 1px solid #cbd5e1; padding: 9px; font-weight:bold; color:#c2185b;">${s.totalAll ? s.totalAll + ' ر.س' : '-'}</td>
+          </tr>
+        `;
+      });
+
+      const printContent = `
+        <div style="font-family: system-ui, -apple-system, sans-serif; direction: rtl; color: #1e293b; padding: 14px;">
+          <div style="text-align: center; border-bottom: 2px solid #c2185b; padding-bottom: 12px; margin-bottom: 15px;">
+            <h1 style="font-size: 20px; margin: 0; color: #c2185b;">تقرير الحصيلة السنوية الكاملة</h1>
+            <h2 style="font-size: 15px; margin: 5px 0; color: #475569;">دخل السنة</h2>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; text-align: center;">
+            <thead>
+              <tr style="background: #f1f5f9; font-weight: bold;">
+                <th style="border: 1px solid #cbd5e1; padding: 9px;">الشهر</th>
+                <th style="border: 1px solid #cbd5e1; padding: 9px;">إجمالي الطلبات</th>
+                <th style="border: 1px solid #cbd5e1; padding: 9px;">مبلغ الطلبات</th>
+                <th style="border: 1px solid #cbd5e1; padding: 9px;">البونص</th>
+                <th style="border: 1px solid #cbd5e1; padding: 9px;">بدل البنزين</th>
+                <th style="border: 1px solid #cbd5e1; padding: 9px;">المجموع الكلي</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+              <tr style="background: #fce4ec; font-weight: bold;">
+                <td style="border: 1px solid #cbd5e1; padding: 9px;">حصيلة السنة الإجمالية</td>
+                <td style="border: 1px solid #cbd5e1; padding: 9px;">${yOrders}</td>
+                <td style="border: 1px solid #cbd5e1; padding: 9px;">${yAmount} ر.س</td>
+                <td style="border: 1px solid #cbd5e1; padding: 9px;">${yBonus} ر.س</td>
+                <td style="border: 1px solid #cbd5e1; padding: 9px;">${yGas} ر.س</td>
+                <td style="border: 1px solid #cbd5e1; padding: 9px; color:#880e4f; font-size:15px;">${yTotal} ر.س</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top: 25px; text-align: center; font-size: 11px; color: #94a3b8;">تم استخراج هذا التقرير عبر تطبيق حاسبة الطلبات © وليد سيد</div>
+        </div>
+      `;
+
+      triggerPrintReport("دخل_السنة", printContent);
+    }
+
+    function navigate(viewId, el) {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('view-' + viewId).classList.add('active');
+      el.classList.add('active');
+    }
+
+    function saveDB() {
+      localStorage.setItem('orders_calc_db', JSON.stringify(db));
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast-msg');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2200);
+    }
+
+    function exportData() {
+      const payload = {
+        db: db,
+        config: appConfig
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "orders_backup.json";
+      a.click();
+    }
+
+    function importData(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (parsed.db) {
+            db = parsed.db;
+            if (parsed.config) appConfig = Object.assign(appConfig, parsed.config);
+          } else {
+            db = parsed;
+          }
+          saveDB();
+          localStorage.setItem('orders_app_config', JSON.stringify(appConfig));
+          loadConfigInputs();
+          init();
+          showToast('تم استيراد البيانات والإعدادات بنجاح!');
+        } catch(err) {
+          alert('ملف غير صالح');
+        }
+      };
+      r.readAsText(file);
+    }
+
+    function clearAllData() {
+      if (confirm('هل أنت متأكد من مسح جميع السجلات والبدء من جديد؟')) {
+        db = {};
+        localStorage.removeItem('orders_last_state');
+        saveDB();
+        init();
+        showToast('تم مسح البيانات بنجاح');
+      }
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
