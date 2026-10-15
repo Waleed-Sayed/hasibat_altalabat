@@ -4,7 +4,7 @@
 <br>
 An Android app designed for delivery drivers to track daily orders and calculate earnings automatically. Features customizable pricing tiers, 3-level bonus & fuel allowance calculations, monthly and annual financial summaries, local JSON backup/restore, and full PDF report export, saving, and sharing.
 
-                                                  Images from inside the app | صور من داخل التطبيق
+Images from inside the app |                                                      صور من داخل التطبيق
 <br>
 <br>
 <p align="center">
