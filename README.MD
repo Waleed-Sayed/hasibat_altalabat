@@ -2,11 +2,4 @@
 An Android app designed for delivery drivers to track daily orders and calculate earnings automatically. Features customizable pricing tiers, 3-level bonus & fuel allowance calculations, monthly and annual financial summaries, local JSON backup/restore, and full PDF report export, saving, and sharing.
 
 [https://github.com/Waleed-Sayed/hasibat_altalabat/blob/main/hasibat_altalabat%20(1).jpeg]
-![hasibat_altalabat (2)](hasibat_altalabat (2).jpg)
-![hasibat_altalabat (3)](hasibat_altalabat (3).jpg)
-![hasibat_altalabat (4)](hasibat_altalabat (4).jpg)
-![hasibat_altalabat (5)](hasibat_altalabat (5).jpg)
-![hasibat_altalabat (6)](hasibat_altalabat (6).jpg)
-![hasibat_altalabat (7)](hasibat_altalabat (7).jpg)
-![hasibat_altalabat (8)](hasibat_altalabat (8).jpg)
-![hasibat_altalabat (9)](hasibat_altalabat (9).jpg)
+![App Screenshot](https://github.com/Waleed-Sayed/hasibat_altalabat/blob/main/hasibat_altalabat%20(1).jpeg?raw=true)
